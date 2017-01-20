@@ -9,9 +9,9 @@ class SearchBuilder(private var rangeFieldName: String,
                     private var startTime: Long,
                     private var endTime: Long) {
 
-  def this() = this(null, null, null)
+  def this() = this(null, 0L, 0L)
 
-  def this(rangeFieldName: String) = this(rangeFieldName, 0, 1L)
+  def this(rangeFieldName: String) = this(rangeFieldName, 0, System.currentTimeMillis)
 
   def setRangeFieldName(fieldName: String) = {
     rangeFieldName = fieldName

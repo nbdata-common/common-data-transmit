@@ -11,6 +11,6 @@ case class TaskInfo(index: String,
 
   def this(index: String,
            `type`: String,
-           rangeFieldName: String) = this(index, `type`, rangeFieldName, null, null)
+           rangeFieldName: String) = this(index, `type`, rangeFieldName, 0L, 0L)
 
 }
