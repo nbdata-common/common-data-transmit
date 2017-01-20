@@ -23,11 +23,11 @@ class ElasticSearchImport {
   defaultConfig += ("es.net.http.auth.pass" -> propertiesLoader.getStr("es.net.http.auth.pass"))
   defaultConfig += ("es.output.json" -> propertiesLoader.getStr("es.output.json"))
 
-  def importDataToEs(rdd: RDD[String], index: String, `type`: String) = {
-    importDataToEs(rdd, index, `type`, defaultConfig)
+  def writeDataToEs(rdd: RDD[String], index: String, `type`: String) = {
+    writeDataToEs(rdd, index, `type`, defaultConfig)
   }
 
-  def importDataToEs(rdd: RDD[String], index: String, `type`: String, cfg: scala.collection.Map[String, String]) = {
+  def writeDataToEs(rdd: RDD[String], index: String, `type`: String, cfg: scala.collection.Map[String, String]) = {
     rdd.saveJsonToEs(index + "/" + `type`, cfg)
   }
 

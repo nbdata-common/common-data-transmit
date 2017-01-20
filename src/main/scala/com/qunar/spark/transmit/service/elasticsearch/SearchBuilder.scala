@@ -32,3 +32,9 @@ class SearchBuilder(private var rangeFieldName: String,
   }
 
 }
+
+object SearchBuilder {
+
+  def apply(rangeFieldName: String, startTime: Long, endTime: Long): SearchBuilder = new SearchBuilder(rangeFieldName, startTime, endTime)
+
+}

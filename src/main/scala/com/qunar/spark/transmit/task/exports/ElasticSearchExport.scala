@@ -32,14 +32,14 @@ class ElasticSearchExport {
     * @param `type`   表名
     * @param queryStr 查询DSL语句
     */
-  def fetchDataFromEs(index: String, `type`: String, queryStr: String): RDD[String] = {
-    fetchDataFromEs(index, `type`, queryStr, defaultConfig)
+  def readDataFromEs(index: String, `type`: String, queryStr: String): RDD[String] = {
+    readDataFromEs(index, `type`, queryStr, defaultConfig)
   }
 
   /**
     * @param cfg 配置元数据信息
     */
-  def fetchDataFromEs(index: String, `type`: String, queryStr: String, cfg: scala.collection.Map[String, String]) = {
+  def readDataFromEs(index: String, `type`: String, queryStr: String, cfg: scala.collection.Map[String, String]) = {
     session.sparkContext.esJsonRDD(index + "/" + `type`, queryStr, cfg).map(record => record._2)
   }
 
