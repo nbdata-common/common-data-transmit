@@ -220,7 +220,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <finalName>device_info_connection</finalName>
+                            <finalName>common-data-transmit</finalName>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
                             <transformers>
