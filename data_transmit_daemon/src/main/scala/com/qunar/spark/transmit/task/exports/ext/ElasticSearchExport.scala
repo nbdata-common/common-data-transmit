@@ -1,6 +1,7 @@
-package com.qunar.spark.transmit.task.exports
+package com.qunar.spark.transmit.task.exports.ext
 
 import com.qunar.spark.transmit.base.{PropertiesLoader, SparkSessions}
+import com.qunar.spark.transmit.task.exports.DataExportTask
 import org.apache.spark.rdd.RDD
 import org.elasticsearch.spark._
 
@@ -9,7 +10,7 @@ import scala.collection.mutable
 /**
   * 将数据从ES中导出
   */
-class ElasticSearchExport {
+class ElasticSearchExport extends DataExportTask {
 
   private val session = SparkSessions.getSparkSession
 

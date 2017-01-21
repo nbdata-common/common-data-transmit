@@ -1,9 +1,8 @@
 package com.qunar.spark.transmit
 
-import com.qunar.spark.transmit.bean.TaskInfo
 import com.qunar.spark.transmit.service.elasticsearch.SearchBuilder
-import com.qunar.spark.transmit.task.exports.ElasticSearchExport
-import com.qunar.spark.transmit.task.imports.ElasticSearchImport
+import com.qunar.spark.transmit.task.exports.ext.ElasticSearchExport
+import com.qunar.spark.transmit.task.imports.ext.ElasticSearchImport
 
 class Main {
 
@@ -23,6 +22,5 @@ class Main {
       new TaskInfo(args(0), args(1), args(2))
     }
   }
-
 
 }

@@ -1,4 +1,4 @@
-package com.qunar.spark.transmit.bean
+package com.qunar.spark.transmit
 
 /**
   * 任务信息
