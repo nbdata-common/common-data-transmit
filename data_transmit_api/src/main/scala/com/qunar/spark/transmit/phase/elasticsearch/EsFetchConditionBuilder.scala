@@ -1,11 +1,16 @@
 package com.qunar.spark.transmit.phase.elasticsearch
 
+import com.qunar.spark.transmit.phase.TaskPhaseBuilder
 import org.elasticsearch.index.query.{AndFilterBuilder, FilterBuilders, QueryBuilders, RangeFilterBuilder}
+
+import scala.language.implicitConversions
 
 /**
   * elasticsearch导出数据的DSL构建者
   */
-sealed trait EsFetchConditionBuilder {
+abstract sealed class EsFetchConditionBuilder private[transmit](private val hostPhaseBuilder: TaskPhaseBuilder) {
+
+  def backToHost = hostPhaseBuilder
 
   /**
     * 生成elasticsearch的DSL语句
@@ -14,10 +19,21 @@ sealed trait EsFetchConditionBuilder {
 
 }
 
+object EsFetchConditionBuilder {
+
+  def rangeFetchBuilder(hostPhaseBuilder: TaskPhaseBuilder) = new EsRangeFetchBuilder(hostPhaseBuilder)
+
+  implicit def backToTaskPhaseBuilder(esFetchConditionBuilder: EsFetchConditionBuilder): TaskPhaseBuilder = {
+    esFetchConditionBuilder.backToHost
+  }
+
+}
+
 /**
   * elasticsearch按字段range作条件过滤取数
   */
-final class EsRangeFetchBuilder extends EsFetchConditionBuilder {
+final class EsRangeFetchBuilder private[transmit](private val hostPhaseBuilder: TaskPhaseBuilder
+                                                 ) extends EsFetchConditionBuilder(hostPhaseBuilder) {
 
   private var rangeFieldName: String = _
 

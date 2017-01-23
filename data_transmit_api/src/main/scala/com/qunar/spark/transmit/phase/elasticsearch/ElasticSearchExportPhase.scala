@@ -41,6 +41,12 @@ final class ElasticSearchExportPhase(private val index: String,
 
 final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) extends ExportPhaseBuilder(hostTask) {
 
+  private var index: String = _
+
+  private var `type`: String = _
+
+  private var fetchConditionBuilder: EsFetchConditionBuilder = _
+
   override def buildPhase: ElasticSearchExportPhase = {
     null
   }
