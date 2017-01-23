@@ -1,6 +1,6 @@
 package com.qunar.spark.transmit
 
-import com.qunar.spark.transmit.phase.{ExportPhase, ImportPhase}
+import com.qunar.spark.transmit.phase._
 
 import scala.language.implicitConversions
 
@@ -31,24 +31,30 @@ object Task {
 
   class TaskBuilder {
 
-    var exportPhase: ExportPhase = _
+    private var exportPhaseBuilder: ExportPhaseBuilder = _
 
-    var importPhase: ImportPhase = _
+    private var importPhaseBuilder: ImportPhaseBuilder = _
 
-    def setExportPhase(exportPhase: ExportPhase): this.type = {
-      this.exportPhase = exportPhase
-
-      this
+    def exportPhaseBuilder(exportPhaseType: ExportPhaseType): ExportPhaseBuilder = {
+      exportPhaseType match {
+        case TaskPhaseType.ELASTIC_SEARCH_EXPORT_PHASE =>
+          exportPhaseBuilder = TaskPhaseBuilder.elasticSearchExportPhaseBuilder(this)
+          exportPhaseBuilder
+        case TaskPhaseType.HDFS_EXPORT_PHASE => null
+      }
     }
 
-    def setImportPhase(exportPhase: ExportPhase): this.type = {
-      this.importPhase = importPhase
-
-      this
+    def importPhaseBuilder(importPhaseType: ImportPhaseType): ImportPhaseBuilder = {
+      importPhaseType match {
+        case TaskPhaseType.ELASTIC_SEARCH_IMPORT_PHASE =>
+          importPhaseBuilder = TaskPhaseBuilder.elasticSearchImportPhaseBuilder(this)
+          importPhaseBuilder
+        case TaskPhaseType.HDFS_IMPORT_PHASE => null
+      }
     }
 
     def build: Task = {
-      new Task(exportPhase, importPhase)
+      new Task(exportPhaseBuilder.build, importPhaseBuilder.build)
     }
 
   }

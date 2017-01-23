@@ -7,8 +7,9 @@ class ScalaTest {
   def test(): Unit = {
     val taskBuilder = Task.builder
 
-    val task = taskBuilder.setExportPhase(null)
-      .setImportPhase(null)
+    val task = taskBuilder
+      .exportPhaseBuilder()
+      .importPhaseBuilder()
       .build
 
     task.transmitData()

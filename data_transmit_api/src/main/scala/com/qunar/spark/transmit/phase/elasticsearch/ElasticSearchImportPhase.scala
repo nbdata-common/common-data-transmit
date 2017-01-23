@@ -2,7 +2,8 @@ package com.qunar.spark.transmit.phase.elasticsearch
 
 import com.google.common.base.Strings
 import com.qunar.spark.transmit.ImportPhaseType
-import com.qunar.spark.transmit.phase.{ImportPhase, PhaseConstants, TaskPhaseType}
+import com.qunar.spark.transmit.Task.TaskBuilder
+import com.qunar.spark.transmit.phase.{ImportPhase, ImportPhaseBuilder, PhaseConstants, TaskPhaseType}
 
 import scala.collection.immutable.HashMap
 
@@ -29,6 +30,14 @@ final class ElasticSearchImportPhase(private val index: String,
     planBuilder += (PhaseConstants.ELASTIC_SEARCH_TYPE -> `type`)
 
     planBuilder.result
+  }
+
+}
+
+final class ElasticSearchImportPhaseBuilder(private val hostTask: TaskBuilder) extends ImportPhaseBuilder(hostTask) {
+
+  override def build: ElasticSearchImportPhase = {
+    null
   }
 
 }
