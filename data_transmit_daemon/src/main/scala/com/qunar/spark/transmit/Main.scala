@@ -1,6 +1,6 @@
 package com.qunar.spark.transmit
 
-import com.qunar.spark.transmit.elasticsearch.ElasticsearchExportPhase$
+import com.qunar.spark.transmit.phase.elasticsearch.ElasticsearchExportPhase$
 import com.qunar.spark.transmit.service.elasticsearch.SearchBuilder
 import com.qunar.spark.transmit.task.exports.ext.ElasticSearchExport
 import com.qunar.spark.transmit.task.imports.ext.ElasticSearchImport
