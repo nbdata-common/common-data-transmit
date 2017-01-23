@@ -53,8 +53,8 @@ object Task {
       }
     }
 
-    def build: Task = {
-      new Task(exportPhaseBuilder.build, importPhaseBuilder.build)
+    def buildTask: Task = {
+      new Task(exportPhaseBuilder.buildPhase, importPhaseBuilder.buildPhase)
     }
 
   }

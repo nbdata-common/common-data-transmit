@@ -41,7 +41,7 @@ final class ElasticSearchExportPhase(private val index: String,
 
 final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) extends ExportPhaseBuilder(hostTask) {
 
-  override def build: ElasticSearchExportPhase = {
+  override def buildPhase: ElasticSearchExportPhase = {
     null
   }
 

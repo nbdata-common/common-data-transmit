@@ -36,7 +36,7 @@ final class ElasticSearchImportPhase(private val index: String,
 
 final class ElasticSearchImportPhaseBuilder(private val hostTask: TaskBuilder) extends ImportPhaseBuilder(hostTask) {
 
-  override def build: ElasticSearchImportPhase = {
+  override def buildPhase: ElasticSearchImportPhase = {
     null
   }
 
