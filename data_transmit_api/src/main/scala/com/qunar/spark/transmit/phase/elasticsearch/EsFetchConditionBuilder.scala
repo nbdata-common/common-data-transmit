@@ -22,8 +22,6 @@ abstract sealed class EsFetchConditionBuilder private[transmit](private val host
 
 object EsFetchConditionBuilder {
 
-  def rangeFetchBuilder(hostPhaseBuilder: TaskPhaseBuilder) = new EsRangeFetchBuilder(hostPhaseBuilder)
-
   /**
     * 从[[EsFetchConditionBuilder]]到[[TaskPhaseBuilder]]的隐式转换
     */
@@ -44,26 +42,26 @@ object EsFetchConditionBuilder {
 /**
   * elasticsearch按字段range作条件过滤取数
   */
-final class EsRangeFetchBuilder private[transmit](private val hostPhaseBuilder: TaskPhaseBuilder
-                                                 ) extends EsFetchConditionBuilder(hostPhaseBuilder) {
+final class EsRangeFetchBuilder[T <: AnyVal] private[transmit](private val hostPhaseBuilder: TaskPhaseBuilder
+                                                              ) extends EsFetchConditionBuilder(hostPhaseBuilder) {
 
   private var rangeFieldName: String = _
 
-  private var beginValue: AnyVal = _
+  private var beginValue: T = _
 
-  private var endValue: AnyVal = _
+  private var endValue: T = _
 
   def setRangeFieldName(fieldName: String): this.type = {
     rangeFieldName = fieldName
     this
   }
 
-  def setStartTime(start: AnyVal): this.type = {
+  def setStartValue(start: T): this.type = {
     beginValue = start
     this
   }
 
-  def setEndTime(end: AnyVal): this.type = {
+  def setEndValue(end: T): this.type = {
     endValue = end
     this
   }

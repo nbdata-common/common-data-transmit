@@ -11,6 +11,7 @@ class ScalaTest {
       .elasticsearchExportPhaseBuilder
       .setIndex("tc_other_order_transaction_idx")
       .setType("tcOtherOrderTransaction")
+      .rangeFetchBuilder[Long].setStartValue(0L).setEndValue(100000L)
 
       .elasticsearchImportPhaseBuilder
       .buildTask

@@ -57,8 +57,8 @@ final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) e
     this
   }
 
-  def rangeFetchBuilder: EsRangeFetchBuilder = {
-    val fetchBuilder = new EsRangeFetchBuilder(this)
+  def rangeFetchBuilder[T <: AnyVal]: EsRangeFetchBuilder[T] = {
+    val fetchBuilder = new EsRangeFetchBuilder[T](this)
     fetchConditionBuilder = fetchBuilder
     fetchBuilder
   }
