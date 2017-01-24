@@ -44,6 +44,16 @@ object TaskPhaseBuilder {
   def elasticSearchImportPhaseBuilder(taskBuilder: TaskBuilder) = new ElasticSearchImportPhaseBuilder(taskBuilder)
 
   /**
+    * 构造一个针对hdfs的[[ExportPhaseBuilder]]
+    */
+  def hdfsExportPhaseBuilder(taskBuilder: TaskBuilder) = null
+
+  /**
+    * 构造一个针对hdfs的[[ImportPhaseBuilder]]
+    */
+  def hdfsImportPhaseBuilder(taskBuilder: TaskBuilder) = null
+
+  /**
     * 从[[TaskPhaseBuilder]]到[[TaskBuilder]]的隐式转换
     * 用于方便开发者使用[[TaskBuilder]]构建定制化的数据传输任务
     */

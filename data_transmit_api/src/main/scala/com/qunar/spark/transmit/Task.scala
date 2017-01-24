@@ -35,22 +35,32 @@ object Task {
 
     private var importPhaseBuilder: ImportPhaseBuilder = _
 
-    def exportPhaseBuilder(exportPhaseType: ExportPhaseType): ExportPhaseBuilder = {
-      exportPhaseType match {
-        case TaskPhaseType.ELASTIC_SEARCH_EXPORT_PHASE =>
-          exportPhaseBuilder = TaskPhaseBuilder.elasticSearchExportPhaseBuilder(this)
-          exportPhaseBuilder
-        case TaskPhaseType.HDFS_EXPORT_PHASE => null
-      }
+    def elasticsearchExportPhaseBuilder = {
+      val taskPhaseBuilder = TaskPhaseBuilder.elasticSearchExportPhaseBuilder(this)
+      exportPhaseBuilder = taskPhaseBuilder
+
+      taskPhaseBuilder
     }
 
-    def importPhaseBuilder(importPhaseType: ImportPhaseType): ImportPhaseBuilder = {
-      importPhaseType match {
-        case TaskPhaseType.ELASTIC_SEARCH_IMPORT_PHASE =>
-          importPhaseBuilder = TaskPhaseBuilder.elasticSearchImportPhaseBuilder(this)
-          importPhaseBuilder
-        case TaskPhaseType.HDFS_IMPORT_PHASE => null
-      }
+    def elasticsearchImportPhaseBuilder = {
+      val taskPhaseBuilder = TaskPhaseBuilder.elasticSearchImportPhaseBuilder(this)
+      importPhaseBuilder = taskPhaseBuilder
+
+      taskPhaseBuilder
+    }
+
+    def hdfsExportPhaseBuilder = {
+      val taskPhaseBuilder = TaskPhaseBuilder.hdfsExportPhaseBuilder(this)
+      exportPhaseBuilder = taskPhaseBuilder
+
+      taskPhaseBuilder
+    }
+
+    def hdfsImportPhaseBuilder = {
+      val taskPhaseBuilder = TaskPhaseBuilder.hdfsImportPhaseBuilder(this)
+      importPhaseBuilder = taskPhaseBuilder
+
+      taskPhaseBuilder
     }
 
     def buildTask: Task = {

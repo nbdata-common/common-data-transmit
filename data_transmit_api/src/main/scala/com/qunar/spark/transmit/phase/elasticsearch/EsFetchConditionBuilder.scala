@@ -1,5 +1,6 @@
 package com.qunar.spark.transmit.phase.elasticsearch
 
+import com.qunar.spark.transmit.Task.TaskBuilder
 import com.qunar.spark.transmit.phase.TaskPhaseBuilder
 import org.elasticsearch.index.query.{AndFilterBuilder, FilterBuilders, QueryBuilders, RangeFilterBuilder}
 
@@ -23,8 +24,19 @@ object EsFetchConditionBuilder {
 
   def rangeFetchBuilder(hostPhaseBuilder: TaskPhaseBuilder) = new EsRangeFetchBuilder(hostPhaseBuilder)
 
+  /**
+    * 从[[EsFetchConditionBuilder]]到[[TaskPhaseBuilder]]的隐式转换
+    */
   implicit def backToTaskPhaseBuilder(esFetchConditionBuilder: EsFetchConditionBuilder): TaskPhaseBuilder = {
     esFetchConditionBuilder.backToHost
+  }
+
+  /**
+    * 从[[EsFetchConditionBuilder]]到[[TaskBuilder]]的隐式转换
+    *
+    */
+  implicit def backToTaskBuilder(esFetchConditionBuilder: EsFetchConditionBuilder): TaskBuilder = {
+    esFetchConditionBuilder.backToHost.backToHost
   }
 
 }
@@ -41,16 +53,19 @@ final class EsRangeFetchBuilder private[transmit](private val hostPhaseBuilder: 
 
   private var endValue: AnyVal = _
 
-  def setRangeFieldName(fieldName: String) = {
+  def setRangeFieldName(fieldName: String): this.type = {
     rangeFieldName = fieldName
+    this
   }
 
-  def setStartTime(start: AnyVal) = {
+  def setStartTime(start: AnyVal): this.type = {
     beginValue = start
+    this
   }
 
-  def setEndTime(end: AnyVal) = {
+  def setEndTime(end: AnyVal): this.type = {
     endValue = end
+    this
   }
 
   override def genDSL: String = {

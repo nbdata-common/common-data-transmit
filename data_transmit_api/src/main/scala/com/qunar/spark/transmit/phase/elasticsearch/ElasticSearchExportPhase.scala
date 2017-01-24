@@ -47,8 +47,24 @@ final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) e
 
   private var fetchConditionBuilder: EsFetchConditionBuilder = _
 
+  def setIndex(index: String): this.type = {
+    this.index = index
+    this
+  }
+
+  def setType(`type`: String): this.type = {
+    this.`type` = `type`
+    this
+  }
+
+  def rangeFetchBuilder: EsRangeFetchBuilder = {
+    val fetchBuilder = new EsRangeFetchBuilder(this)
+    fetchConditionBuilder = fetchBuilder
+    fetchBuilder
+  }
+
   override def buildPhase: ElasticSearchExportPhase = {
-    null
+    new ElasticSearchExportPhase(index, `type`, fetchConditionBuilder.genDSL)
   }
 
 }

@@ -1,5 +1,4 @@
 import com.qunar.spark.transmit.Task
-import com.qunar.spark.transmit.phase.TaskPhaseType
 import org.junit.Test
 
 class ScalaTest {
@@ -9,8 +8,11 @@ class ScalaTest {
     val taskBuilder = Task.builder
 
     val task = taskBuilder
-      .exportPhaseBuilder(TaskPhaseType.ELASTIC_SEARCH_EXPORT_PHASE)
-      .importPhaseBuilder(TaskPhaseType.HDFS_IMPORT_PHASE)
+      .elasticsearchExportPhaseBuilder
+      .setIndex("tc_other_order_transaction_idx")
+      .setType("tcOtherOrderTransaction")
+
+      .elasticsearchImportPhaseBuilder
       .buildTask
 
     task.transmitData()
