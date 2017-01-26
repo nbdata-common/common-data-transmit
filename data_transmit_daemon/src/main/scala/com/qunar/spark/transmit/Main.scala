@@ -5,7 +5,7 @@ import com.qunar.spark.transmit.service.elasticsearch.SearchBuilder
 import com.qunar.spark.transmit.task.exports.ext.ElasticSearchExport
 import com.qunar.spark.transmit.task.imports.ext.ElasticSearchImport
 
-class Main {
+object Main {
 
   def main(args: Array[String]) {
     val taskInfo = readConfig(args)

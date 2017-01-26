@@ -13,9 +13,9 @@ abstract sealed class TaskPhaseBuilder private[transmit](private val hostTask: T
   /**
     * 配合隐式转换[[TaskPhaseBuilder.backToTaskBuilder]],以确保本[[TaskPhaseBuilder]]能回到自己的宿主[[TaskBuilder]]
     */
-  def backToHost = hostTask
+  protected[transmit] def backToHost = hostTask
 
-  def buildPhase: TaskPhase
+  protected[transmit] def buildPhase: TaskPhase
 
 }
 
