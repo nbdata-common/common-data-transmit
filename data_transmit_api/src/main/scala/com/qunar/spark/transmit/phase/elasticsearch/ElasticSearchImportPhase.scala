@@ -36,8 +36,22 @@ final class ElasticSearchImportPhase(private val index: String,
 
 final class ElasticSearchImportPhaseBuilder(private val hostTask: TaskBuilder) extends ImportPhaseBuilder(hostTask) {
 
+  private var index: String = _
+
+  private var `type`: String = _
+
+  def setIndex(index: String): this.type = {
+    this.index = index
+    this
+  }
+
+  def setType(`type`: String): this.type = {
+    this.`type` = `type`
+    this
+  }
+
   override def buildPhase: ElasticSearchImportPhase = {
-    null
+    new ElasticSearchImportPhase(index, `type`)
   }
 
 }

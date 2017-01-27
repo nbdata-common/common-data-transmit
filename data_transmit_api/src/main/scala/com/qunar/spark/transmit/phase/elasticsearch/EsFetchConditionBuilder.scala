@@ -55,18 +55,63 @@ final class EsRangeFetchBuilder[T <: AnyVal] private[transmit](private val hostP
     this
   }
 
-  def setStartValue(start: T): this.type = {
-    beginValue = start
+  def setStartValue(beginValue: T): this.type = {
+    this.beginValue = beginValue
     this
   }
 
-  def setEndValue(end: T): this.type = {
-    endValue = end
+  def setEndValue(endValue: T): this.type = {
+    this.endValue = endValue
     this
   }
 
   protected[transmit] override def genDSLInternal: FilterBuilder = {
     FilterBuilders.rangeFilter(rangeFieldName).gte(beginValue).lt(endValue)
+  }
+
+}
+
+/**
+  * elasticsearch按字段值term匹配作条件过滤取数
+  */
+final class EsTermFetchBuilder[T <: AnyVal] private[transmit](private val hostPhaseBuilder: TaskPhaseBuilder
+                                                             ) extends EsFetchConditionBuilder(hostPhaseBuilder) {
+
+  private var fieldName: String = _
+
+  private var values: Iterable[AnyVal] = _
+
+  def setFieldName(fieldName: String): this.type = {
+    this.fieldName = fieldName
+    this
+  }
+
+  def setValues(values: AnyVal*): this.type = {
+    this.values = values
+    this
+  }
+
+  protected[transmit] override def genDSLInternal: FilterBuilder = {
+    FilterBuilders.termsFilter(fieldName, values)
+  }
+
+}
+
+/**
+  * elasticsearch按字段值exists匹配作条件过滤取数
+  */
+final class EsExistsFetchBuilder private[transmit](private val hostPhaseBuilder: TaskPhaseBuilder
+                                                  ) extends EsFetchConditionBuilder(hostPhaseBuilder) {
+
+  private var fieldName: String = _
+
+  def setFieldName(fieldName: String): this.type = {
+    this.fieldName = fieldName
+    this
+  }
+
+  protected[transmit] override def genDSLInternal: FilterBuilder = {
+    FilterBuilders.existsFilter(fieldName)
   }
 
 }

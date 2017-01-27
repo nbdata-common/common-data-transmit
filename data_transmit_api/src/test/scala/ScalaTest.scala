@@ -10,13 +10,14 @@ class ScalaTest {
     val taskBuilder = Task.builder
 
     val task = taskBuilder
+      // export phase
       .elasticsearchExportPhaseBuilder
       .setIndex("tc_other_order_transaction_idx")
       .setType("tcOtherOrderTransaction")
-      .customFetchBuilder.setQueryDSL("")
-      //      .rangeFetchBuilder[Long](LogicOperatorType.MUST).setStartValue(0L).setEndValue(100000L)
-
+      .rangeFetchBuilder[Long](LogicOperatorType.MUST).setStartValue(0L).setEndValue(100000L)
+      // import phase
       .elasticsearchImportPhaseBuilder
+      // build
       .buildTask
 
     task.transmitData()

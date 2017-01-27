@@ -73,7 +73,7 @@ final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) e
         case LogicOperatorType.MUST => boolFilterBuilder.must(tuple._2.genDSLInternal)
         case LogicOperatorType.SHOULD => boolFilterBuilder.should(tuple._2.genDSLInternal)
         case LogicOperatorType.MUST_NOT => boolFilterBuilder.mustNot(tuple._2.genDSLInternal)
-        // 对于用户自定义逻辑的特殊处理
+        // 对于用户自定义逻辑特殊处理:短路掉其他的逻辑条件
         case LogicOperatorType.CUSTOM => return tuple._2.genDSLInternal.toString
       }
     })
@@ -109,6 +109,44 @@ final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) e
       case LogicOperatorType.CUSTOM =>
         //todo logging error
         throw new IllegalArgumentException("LogicGateType CUSTOM does not confirm to method rangeFetchBuilder")
+    }
+
+    fetchBuilder
+  }
+
+  /**
+    *
+    */
+  def termFetchBuilder[T <: AnyVal](logicGateType: LogicGateType): EsTermFetchBuilder[T] = {
+    Preconditions.checkNotNull(logicGateType)
+
+    val fetchBuilder = new EsTermFetchBuilder[T](this)
+    logicGateType match {
+      case LogicOperatorType.MUST => filterOperatorMap += (LogicOperatorType.MUST -> fetchBuilder)
+      case LogicOperatorType.SHOULD => filterOperatorMap += (LogicOperatorType.SHOULD -> fetchBuilder)
+      case LogicOperatorType.MUST_NOT => filterOperatorMap += (LogicOperatorType.MUST_NOT -> fetchBuilder)
+      case LogicOperatorType.CUSTOM =>
+        //todo logging error
+        throw new IllegalArgumentException("LogicGateType CUSTOM does not confirm to method termFetchBuilder")
+    }
+
+    fetchBuilder
+  }
+
+  /**
+    *
+    */
+  def existsFetchBuilder(logicGateType: LogicGateType): EsExistsFetchBuilder = {
+    Preconditions.checkNotNull(logicGateType)
+
+    val fetchBuilder = new EsExistsFetchBuilder(this)
+    logicGateType match {
+      case LogicOperatorType.MUST => filterOperatorMap += (LogicOperatorType.MUST -> fetchBuilder)
+      case LogicOperatorType.SHOULD => filterOperatorMap += (LogicOperatorType.SHOULD -> fetchBuilder)
+      case LogicOperatorType.MUST_NOT => filterOperatorMap += (LogicOperatorType.MUST_NOT -> fetchBuilder)
+      case LogicOperatorType.CUSTOM =>
+        //todo logging error
+        throw new IllegalArgumentException("LogicGateType CUSTOM does not confirm to method termFetchBuilder")
     }
 
     fetchBuilder
