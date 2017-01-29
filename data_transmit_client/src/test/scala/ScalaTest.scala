@@ -17,6 +17,8 @@ class ScalaTest {
       .rangeFetchBuilder[Long](LogicOperatorType.MUST).setStartValue(0L).setEndValue(100000L)
       // import phase
       .elasticsearchImportPhaseBuilder
+      .setIndex("")
+      .setType("")
       // build
       .buildTask
 

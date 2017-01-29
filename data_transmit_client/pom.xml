@@ -11,7 +11,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>data-transmit-api</artifactId>
+    <artifactId>data-transmit-client</artifactId>
     <packaging>jar</packaging>
 
     <build>
