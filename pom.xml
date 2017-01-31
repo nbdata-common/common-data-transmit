@@ -12,7 +12,7 @@
     <version>0.0.1-BETA</version>
 
     <modules>
-        <module>data_transmit_api</module>
+        <module>data_transmit_client</module>
         <module>data_transmit_daemon</module>
     </modules>
 
@@ -28,6 +28,12 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.qunar.spark</groupId>
+            <artifactId>common-base</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.elasticsearch</groupId>
@@ -200,9 +206,9 @@
         </dependency>
 
         <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>15.0</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>15.0</version>
         </dependency>
 
         <!--<dependency>-->
