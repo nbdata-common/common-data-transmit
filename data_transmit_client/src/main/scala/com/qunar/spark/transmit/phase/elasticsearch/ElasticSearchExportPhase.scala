@@ -1,10 +1,11 @@
 package com.qunar.spark.transmit.phase.elasticsearch
 
 import com.google.common.base.{Preconditions, Strings}
+import com.qunar.spark.base.log.Logging
 import com.qunar.spark.transmit.ExportPhaseType
 import com.qunar.spark.transmit.Task.TaskBuilder
 import com.qunar.spark.transmit.phase._
-import com.qunar.spark.transmit.phase.elasticsearch.LogicOperatorType.LogicGateType
+import com.qunar.spark.transmit.phase.elasticsearch.LogicOperatorType.LogicOperatorType
 import org.elasticsearch.index.query.{FilterBuilders, QueryBuilders}
 
 import scala.collection.immutable.HashMap
@@ -14,7 +15,7 @@ import scala.collection.immutable.HashMap
   */
 final class ElasticSearchExportPhase(private val index: String,
                                      private val `type`: String,
-                                     private val fetchDSL: String) extends ExportPhase {
+                                     private val fetchDSL: String) extends ExportPhase with Logging {
 
   override def phaseType: ExportPhaseType = TaskPhaseType.ELASTIC_SEARCH_EXPORT_PHASE
 
@@ -23,13 +24,13 @@ final class ElasticSearchExportPhase(private val index: String,
     planBuilder.sizeHint(3)
 
     if (Strings.isNullOrEmpty(index)) {
-      //todo logging
+      logError("ElasticSearchExportPhase genPhaseExecutionPlan: index is empty")
     }
     if (Strings.isNullOrEmpty(`type`)) {
-      //todo logging
+      logError("ElasticSearchExportPhase genPhaseExecutionPlan: type is empty")
     }
     if (Strings.isNullOrEmpty(fetchDSL)) {
-      //todo logging
+      logError("ElasticSearchExportPhase genPhaseExecutionPlan: fetchDSL is empty")
     }
 
     planBuilder += (PhaseConstants.ELASTIC_SEARCH_INDEX -> index)
@@ -41,7 +42,7 @@ final class ElasticSearchExportPhase(private val index: String,
 
 }
 
-final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) extends ExportPhaseBuilder(hostTask) {
+final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) extends ExportPhaseBuilder(hostTask) with Logging {
 
   private var index: String = _
 
@@ -58,7 +59,7 @@ final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) e
   private val boolFilterBuilder = FilterBuilders.boolFilter()
 
   // 具体的filter与其在boolFilterBuilder中的对应逻辑操作的映射
-  private val filterOperatorMap = HashMap.newBuilder[LogicGateType, EsFetchConditionBuilder]
+  private val filterOperatorMap = HashMap.newBuilder[LogicOperatorType, EsFetchConditionBuilder]
 
   //容量预加载
   filterOperatorMap.sizeHint(5)
@@ -98,7 +99,7 @@ final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) e
     * @param logicGateType 表征此RangeFilterBuilder属于那种Boolean DSL的逻辑运算关系
     * @tparam T 目标字段值的类型
     */
-  def rangeFetchBuilder[T <: AnyVal](logicGateType: LogicGateType): EsRangeFetchBuilder[T] = {
+  def rangeFetchBuilder[T <: AnyVal](logicGateType: LogicOperatorType): EsRangeFetchBuilder[T] = {
     Preconditions.checkNotNull(logicGateType)
 
     val fetchBuilder = new EsRangeFetchBuilder[T](this)
@@ -107,17 +108,17 @@ final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) e
       case LogicOperatorType.SHOULD => filterOperatorMap += (LogicOperatorType.SHOULD -> fetchBuilder)
       case LogicOperatorType.MUST_NOT => filterOperatorMap += (LogicOperatorType.MUST_NOT -> fetchBuilder)
       case LogicOperatorType.CUSTOM =>
-        //todo logging error
-        throw new IllegalArgumentException("LogicGateType CUSTOM does not confirm to method rangeFetchBuilder")
+        logError("LogicOperatorType CUSTOM does not confirm to method rangeFetchBuilder")
+        throw new IllegalArgumentException("LogicOperatorType CUSTOM does not confirm to method rangeFetchBuilder")
     }
 
     fetchBuilder
   }
 
   /**
-    *
+    * [[org.elasticsearch.index.query.TermFilterBuilder]]的取数逻辑构造者
     */
-  def termFetchBuilder[T <: AnyVal](logicGateType: LogicGateType): EsTermFetchBuilder[T] = {
+  def termFetchBuilder[T <: AnyVal](logicGateType: LogicOperatorType): EsTermFetchBuilder[T] = {
     Preconditions.checkNotNull(logicGateType)
 
     val fetchBuilder = new EsTermFetchBuilder[T](this)
@@ -126,17 +127,17 @@ final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) e
       case LogicOperatorType.SHOULD => filterOperatorMap += (LogicOperatorType.SHOULD -> fetchBuilder)
       case LogicOperatorType.MUST_NOT => filterOperatorMap += (LogicOperatorType.MUST_NOT -> fetchBuilder)
       case LogicOperatorType.CUSTOM =>
-        //todo logging error
-        throw new IllegalArgumentException("LogicGateType CUSTOM does not confirm to method termFetchBuilder")
+        logError("LogicOperatorType CUSTOM does not confirm to method termFetchBuilder")
+        throw new IllegalArgumentException("LogicOperatorType CUSTOM does not confirm to method termFetchBuilder")
     }
 
     fetchBuilder
   }
 
   /**
-    *
+    * [[org.elasticsearch.index.query.ExistsFilterBuilder]]的取数逻辑构造者
     */
-  def existsFetchBuilder(logicGateType: LogicGateType): EsExistsFetchBuilder = {
+  def existsFetchBuilder(logicGateType: LogicOperatorType): EsExistsFetchBuilder = {
     Preconditions.checkNotNull(logicGateType)
 
     val fetchBuilder = new EsExistsFetchBuilder(this)
@@ -145,8 +146,8 @@ final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) e
       case LogicOperatorType.SHOULD => filterOperatorMap += (LogicOperatorType.SHOULD -> fetchBuilder)
       case LogicOperatorType.MUST_NOT => filterOperatorMap += (LogicOperatorType.MUST_NOT -> fetchBuilder)
       case LogicOperatorType.CUSTOM =>
-        //todo logging error
-        throw new IllegalArgumentException("LogicGateType CUSTOM does not confirm to method termFetchBuilder")
+        logError("LogicOperatorType CUSTOM does not confirm to method existsFetchBuilder")
+        throw new IllegalArgumentException("LogicOperatorType CUSTOM does not confirm to method termFetchBuilder")
     }
 
     fetchBuilder
@@ -174,7 +175,7 @@ final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) e
   */
 object LogicOperatorType extends Enumeration {
 
-  type LogicGateType = Value
+  type LogicOperatorType = Value
 
   // 三种基本的BoolFilterBuilder逻辑运算关系
   val MUST, SHOULD, MUST_NOT = Value
