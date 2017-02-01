@@ -2,6 +2,7 @@ package com.qunar.spark.transmit.phase
 
 import com.qunar.spark.transmit.Task.TaskBuilder
 import com.qunar.spark.transmit.phase.elasticsearch.{ElasticSearchExportPhaseBuilder, ElasticSearchImportPhaseBuilder}
+import com.qunar.spark.transmit.phase.hdfs.{HdfsExportPhaseBuilder, HdfsImportPhaseBuilder}
 
 import scala.language.implicitConversions
 
@@ -46,12 +47,12 @@ object TaskPhaseBuilder {
   /**
     * 构造一个针对hdfs的[[ExportPhaseBuilder]]
     */
-  def hdfsExportPhaseBuilder(taskBuilder: TaskBuilder) = null
+  def hdfsExportPhaseBuilder(taskBuilder: TaskBuilder) = new HdfsExportPhaseBuilder(taskBuilder)
 
   /**
     * 构造一个针对hdfs的[[ImportPhaseBuilder]]
     */
-  def hdfsImportPhaseBuilder(taskBuilder: TaskBuilder) = null
+  def hdfsImportPhaseBuilder(taskBuilder: TaskBuilder) = new HdfsImportPhaseBuilder(taskBuilder)
 
   /**
     * 从[[TaskPhaseBuilder]]到[[TaskBuilder]]的隐式转换

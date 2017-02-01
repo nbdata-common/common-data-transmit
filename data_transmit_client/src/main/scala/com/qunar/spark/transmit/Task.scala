@@ -33,11 +33,13 @@ class Task private[transmit](private val taskName: String,
     * @return 是否预写成功
     */
   private def writeToTransLog(exportPhase: ExportPhase, importPhase: ImportPhase): Boolean = {
-    val exportPhasePlan = exportPhase.genPhaseExecutionPlan
     val exportPhaseType = exportPhase.phaseType
-    val importPhasePlan = importPhase.genPhaseExecutionPlan
+    val exportPhasePlan = exportPhase.genPhaseExecutionPlan
+    val exportExtraInfo = exportPhase.genExtraInfo
     val importPhaseType = importPhase.phaseType
-    val taskInfo = new TaskInfo(exportPhaseType, exportPhasePlan, importPhaseType, importPhasePlan)
+    val importPhasePlan = importPhase.genPhaseExecutionPlan
+    val importExtraInfo = importPhase.genExtraInfo
+    val taskInfo = new TaskInfo(exportPhaseType, exportPhasePlan, exportExtraInfo, importPhaseType, importPhasePlan, importExtraInfo)
 
     writeToTransLogInternal(taskInfo)
   }
@@ -110,13 +112,27 @@ object Task {
   * 通过将其写入hdfs,引起daemon端监听服务active,执行任务
   * NOTICE: 这里不使用scala case class,是考虑到jackson的兼容性限制.因为
   * 采用jackson序列化,使用标准的java bean是最稳定的.
+  *
+  * @param exportType      数据导出阶段的类型
+  * @param exportInfo      数据导出阶段的必要信息
+  * @param exportExtraInfo 数据导出阶段的额外信息
+  * @param importType      数据导入阶段的类型
+  * @param importInfo      数据导入阶段的必要信息
+  * @param importExtraInfo 数据导入阶段的额外信息
   */
 class TaskInfo(exportType: ExportPhaseType,
                exportInfo: HashMap[String, String],
+               exportExtraInfo: HashMap[String, String] = null,
                importType: ImportPhaseType,
-               importInfo: HashMap[String, String]) {
+               importInfo: HashMap[String, String],
+               importExtraInfo: HashMap[String, String] = null) {
 
-  def this() = this(null, null, null, null)
+  //  def this(exportType: ExportPhaseType,
+  //           exportInfo: HashMap[String, String],
+  //           importType: ImportPhaseType,
+  //           importInfo: HashMap[String, String]) = this(exportType, exportInfo, null, importType, importInfo, null)
+
+  def this() = this(null, null, null, null, null, null)
 
   // 数据导出阶段的类型
   private var exportPhaseType: ExportPhaseType = exportType

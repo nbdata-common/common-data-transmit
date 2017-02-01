@@ -14,6 +14,8 @@ sealed trait TaskPhase {
 
   def genPhaseExecutionPlan: HashMap[String, String]
 
+  def genExtraInfo: HashMap[String, String]
+
 }
 
 /**

@@ -15,11 +15,10 @@ class ScalaTest {
       .elasticsearchExportPhaseBuilder
       .setIndex("tc_order_transaction_idx")
       .setType("tcOrderTransaction")
-      .rangeFetchBuilder[Long](LogicOperatorType.MUST).setStartValue(0L).setEndValue(100000L)
+      .rangeFetchBuilder[Long](LogicOperatorType.MUST)
+      .setRangeFieldName("updateTime").setStartValue(0L).setEndValue(System.currentTimeMillis)
       // import phase
-      .elasticsearchImportPhaseBuilder
-      .setIndex("")
-      .setType("")
+      .hdfsImportPhaseBuilder.setPath("/esdata/lzo/tc_order_idx/")
       // build
       .buildTask
 

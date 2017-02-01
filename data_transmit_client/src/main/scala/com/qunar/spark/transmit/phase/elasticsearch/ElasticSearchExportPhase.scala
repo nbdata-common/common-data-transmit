@@ -15,7 +15,8 @@ import scala.collection.immutable.HashMap
   */
 final class ElasticSearchExportPhase(private val index: String,
                                      private val `type`: String,
-                                     private val fetchDSL: String) extends ExportPhase with Logging {
+                                     private val fetchDSL: String,
+                                     private val extraInfo: HashMap[String, String] = null) extends ExportPhase with Logging {
 
   override def phaseType: ExportPhaseType = TaskPhaseType.ELASTIC_SEARCH_EXPORT_PHASE
 
@@ -40,13 +41,23 @@ final class ElasticSearchExportPhase(private val index: String,
     planBuilder.result
   }
 
+  override def genExtraInfo: HashMap[String, String] = extraInfo
+
 }
 
+/**
+  * 针对[[ElasticSearchExportPhase]]的构建者
+  */
 final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) extends ExportPhaseBuilder(hostTask) with Logging {
 
   private var index: String = _
 
   private var `type`: String = _
+
+  // 用于构建额外的信息
+  private val extraInfoBuilder = HashMap.newBuilder[String, String]
+
+  extraInfoBuilder.sizeHint(10)
 
   /* 以下两者,用于构建elasticsearch的取数DSL */
 
@@ -164,8 +175,14 @@ final class ElasticSearchExportPhaseBuilder(private val hostTask: TaskBuilder) e
     fetchBuilder
   }
 
+  /**
+    * 添加额外的信息
+    */
+  def addExtraInfo(extraInfo: (String, String)) = extraInfoBuilder += extraInfo
+
   protected[transmit] override def buildPhase: ElasticSearchExportPhase = {
-    new ElasticSearchExportPhase(index, `type`, genDSL)
+    val extraInfo = extraInfoBuilder.result
+    new ElasticSearchExportPhase(index, `type`, genDSL, extraInfo)
   }
 
 }

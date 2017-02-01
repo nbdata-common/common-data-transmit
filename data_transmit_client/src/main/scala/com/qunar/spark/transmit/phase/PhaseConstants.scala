@@ -13,4 +13,6 @@ object PhaseConstants {
 
   val ELASTIC_SEARCH_DSL = "fetch_dsl"
 
+  val HDFS_PATH = "hdfs_path"
+
 }

@@ -12,7 +12,8 @@ import scala.collection.immutable.HashMap
   * 针对elasticsearch的导入阶段的配置及任务执行计划生成
   */
 final class ElasticSearchImportPhase(private val index: String,
-                                     private val `type`: String) extends ImportPhase with Logging {
+                                     private val `type`: String,
+                                     private val extraInfo: HashMap[String, String] = null) extends ImportPhase with Logging {
 
   override def phaseType: ImportPhaseType = TaskPhaseType.ELASTIC_SEARCH_IMPORT_PHASE
 
@@ -33,6 +34,8 @@ final class ElasticSearchImportPhase(private val index: String,
     planBuilder.result
   }
 
+  override def genExtraInfo: HashMap[String, String] = extraInfo
+
 }
 
 final class ElasticSearchImportPhaseBuilder(private val hostTask: TaskBuilder) extends ImportPhaseBuilder(hostTask) {
@@ -40,6 +43,11 @@ final class ElasticSearchImportPhaseBuilder(private val hostTask: TaskBuilder) e
   private var index: String = _
 
   private var `type`: String = _
+
+  // 用于构建额外的信息
+  private val extraInfoBuilder = HashMap.newBuilder[String, String]
+
+  extraInfoBuilder.sizeHint(10)
 
   def setIndex(index: String): this.type = {
     this.index = index
@@ -51,8 +59,14 @@ final class ElasticSearchImportPhaseBuilder(private val hostTask: TaskBuilder) e
     this
   }
 
+  /**
+    * 添加额外的信息
+    */
+  def addExtraInfo(extraInfo: (String, String)) = extraInfoBuilder += extraInfo
+
   override def buildPhase: ElasticSearchImportPhase = {
-    new ElasticSearchImportPhase(index, `type`)
+    val extraInfo = extraInfoBuilder.result
+    new ElasticSearchImportPhase(index, `type`, extraInfo)
   }
 
 }
