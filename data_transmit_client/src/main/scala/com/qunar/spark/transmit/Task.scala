@@ -64,8 +64,9 @@ object Task {
 
     private var importPhaseBuilder: ImportPhaseBuilder = _
 
-    def setTaskName(taskName: String) = {
+    def setTaskName(taskName: String): this.type = {
       this.taskName = taskName
+      this
     }
 
     def elasticsearchExportPhaseBuilder = {
